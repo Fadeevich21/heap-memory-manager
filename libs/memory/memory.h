@@ -3,9 +3,8 @@
 
 #include <stddef.h>
 
+void* calloc_(size_t count_elements, size_t size);
 void* malloc_(size_t size);
 void free_(void* ptr);
-
-void* calloc_(size_t number, size_t size);
 
 #endif // _MEMORY_H
