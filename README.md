@@ -13,7 +13,9 @@
 
 [_malloc\__](https://github.com/Fadeevich21/heap-memory-manager/blob/f10b8e55414341f112ce1194cbd6938de51ffd5b/libs/memory/memory.c#L31)
 
-```void* malloc_(size_t size);```
+```C
+void* malloc_(size_t size);
+```
 
 __Описание__  
 Выделяет динамическую память размером _size_.
@@ -30,7 +32,9 @@ __Возвращаемое значение__
 
 [_free\__](https://github.com/Fadeevich21/heap-memory-manager/blob/f10b8e55414341f112ce1194cbd6938de51ffd5b/libs/memory/memory.c#L73)
 
-```void free_(void* ptr);```
+```C
+void free_(void* ptr);
+```
   
 __Описание__  
 Освобождает память по указателю _ptr_.
@@ -45,7 +49,9 @@ __Возвращаемое значение__
 
 [_calloc\__](https://github.com/Fadeevich21/heap-memory-manager/blob/f10b8e55414341f112ce1194cbd6938de51ffd5b/libs/memory/memory.c#L69)
 
-```void* calloc_(size_t count_elements, size_t size);```
+```C
+void* calloc_(size_t count_elements, size_t size);
+```
 
 __Описание__  
 Выделяет память для _count\_elements_ размером _size_.
