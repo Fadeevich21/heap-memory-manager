@@ -22,43 +22,36 @@ void* malloc_mmap(size_t size) {
         PRINT_ERROR("Память не выделена! Код ошибки: %d", errno);
         return NULL;
     }
-    init_chunk(chunk_ptr, size);
+    init_chunk(chunk_ptr, size, size);
     chunk_ptr->flags.is_mmap = 1;
     
     return MEMORY_PTR(chunk_ptr);
 }
 
 void* malloc_(size_t size) {
-    size_t allocate_size = ALLOCATE_SIZE(size);
-    if (allocate_size > SIZE_32MEGABYTES) {
-        return malloc_mmap(allocate_size);
+    size_t allocated_size = ALLOCATE_SIZE(size);
+    if (allocated_size > SIZE_32MEGABYTES) {
+        return malloc_mmap(allocated_size);
     }
 
     Chunk* chunk_ptr = chunk_head;
     while (chunk_ptr != NULL) {
-        if (is_free_chunk(chunk_ptr) && get_size_chunk(chunk_ptr) >= allocate_size) {
-/* FIXME: Алгоритм выбора чанка, если памяти хватает
- * Сейчас сделано так, что если размер чанка >= выделяемого размера, то всё ок.
- * Лучше сделать так, что если размер чанка == выделяемого размера, то тогда
- * берём этот чанк, иначе пробуем разбить его на несколько чанков.
- */
-
+        if (is_free_chunk(chunk_ptr) && chunk_ptr->allocated_size >= allocated_size) {
             chunk_ptr->flags.is_free = 0;
-            set_size_chunk(chunk_ptr, allocate_size);
+            chunk_ptr->used_size = allocated_size;
             return MEMORY_PTR(chunk_ptr);
         }
-
         chunk_ptr = chunk_ptr->next_chunk;
     }
 
-    chunk_ptr = sbrk(allocate_size);
+    chunk_ptr = sbrk(allocated_size);
     if (chunk_ptr != (void*) -1) {
-        init_chunk(chunk_ptr, allocate_size);
-        if (chunk_head == NULL) {
-            chunk_head = chunk_ptr;
-        } else {
+        init_chunk(chunk_ptr, allocated_size, allocated_size);
+        if (chunk_head != NULL) {
             chunk_ptr->next_chunk = chunk_head->next_chunk;
             chunk_head->prev_chunk = chunk_ptr;
+        } else {
+            chunk_head = chunk_ptr;
         }
         return MEMORY_PTR(chunk_ptr);
     }
@@ -84,11 +77,12 @@ void free_(void* ptr) {
 
     if (is_mmap_chunk(chunk_ptr)) {
         int munmap_return = munmap(chunk_ptr,
-                                   ALLOCATE_SIZE(get_size_chunk(chunk_ptr)));
+                                   ALLOCATE_SIZE(chunk_ptr->allocated_size));
         if (munmap_return == -1) {
             PRINT_ERROR("Произошла ошибка при очистке памяти: %d", munmap_return);
         }
     } else {
         chunk_ptr->flags.is_free = 1;
+        chunk_ptr->used_size = 0;
     }
 }
