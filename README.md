@@ -11,6 +11,8 @@
 ## Описание
 ### Функции для работы с динамической памятью
 
+[_malloc\__](https://github.com/Fadeevich21/heap-memory-manager/blob/f10b8e55414341f112ce1194cbd6938de51ffd5b/libs/memory/memory.c#L31)
+
 ```void* malloc_(size_t size);```
 
 __Описание__  
@@ -26,6 +28,8 @@ __Возвращаемое значение__
 
 ---
 
+[_free\__](https://github.com/Fadeevich21/heap-memory-manager/blob/f10b8e55414341f112ce1194cbd6938de51ffd5b/libs/memory/memory.c#L73)
+
 ```void free_(void* ptr);```
   
 __Описание__  
@@ -38,6 +42,8 @@ __Возвращаемое значение__
 Ничего.
 
 ---
+
+[_calloc\__](https://github.com/Fadeevich21/heap-memory-manager/blob/f10b8e55414341f112ce1194cbd6938de51ffd5b/libs/memory/memory.c#L69)
 
 ```void* calloc_(size_t count_elements, size_t size);```
 
